@@ -91,7 +91,7 @@ class MyPostsList(PermissionRequiredMixin, ListView):
     ordering = '-created_date'
     template_name = 'myposts.html'
     context_object_name = 'myposts'
-    paginate_by = 5
+    paginate_by = 10
 
  
     def get_context_data(self, **kwargs):

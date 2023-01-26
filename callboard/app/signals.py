@@ -13,7 +13,7 @@ def response_emailing(sender, instance, created, **kwarga):
         post = Post.objects.get(pk=response.pk)
         usr = User.objects.get(pk=post.post_author.pk)
         content = f'Вы получили новый отклик на ваше объявление - {settings.SITE_URL}/{response.id}'
-        send_mail(subject='Новый отклик', message=content, from_email=settings.DEFAULT_FROM_EMAIL, recipient_list=(usr.email,))
+        send_mail('Новый отклик', content, settings.DEFAULT_FROM_EMAIL, (usr.email,))
         
 @receiver(post_save, sender=Response)
 def response_accept_emailing(sender, instance, created, **kwargs):
@@ -32,8 +32,8 @@ def subscribers_emailing(sender, instance, **kwargs):
         categories = instance.post_category.all()
         subscribers = []
         for cats in categories:
-            subscribers += cats.subscribers.all()
-            print(subscribers)
+            if instance.post_author not in cats.subscribers.all():
+                subscribers += cats.subscribers.all()
 
         print(subscribers)
         username = [usr.username for usr in subscribers]
