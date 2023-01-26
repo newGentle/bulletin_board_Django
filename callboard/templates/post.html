@@ -1,0 +1,58 @@
+{% extends 'default.html' %}
+
+{% block title %}
+  объявление
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title text-center">{{ post.post_title }}</h5>
+    <hr>
+    <p class="card-text">{{ post.post_content|safe }}</p>
+    <hr>
+    <h6 class="card-subtitle mb-3 text-muted">
+      {% for items in post.post_category.all %}
+        Категория: {{ items.get_category_name_display }} - 
+        {% if items in is_subscribed %}
+          <a href="{% url 'unsubscribe' items.id %}" class="btn btn-sm btn-warning">Отписаться</a>
+        {% else %}
+          <a href="{% url 'subscribe' items.id %}" class="btn btn-sm btn-success">Подписаться</a>
+        {% endif %}
+      {% endfor %} 
+    </h6>
+    <h6 class="card-subtitle mb-3 text-muted">Дата: {{ post.created_date|safe }}</h6>
+    <h6 class="card-subtitle text-muted">Автор: {{ post.post_author|safe }}</h6>
+    
+    
+  </div>
+</div>
+<a href="/" class="btn btn-primary mt-2">Назад</a>
+
+{% if owner == request.user.id %}
+  <a href="{% url 'update_post' post.id %}" class="btn btn-primary mt-2">Редактировать</a>
+  <a href="{% url 'delete_post' post.id %}" class="btn btn-danger mt-2">Удалить</a>
+{% endif %}
+{% if user.is_authenticated %}
+      <div class="mt-5">
+        {% if owner != request.user.id %}
+        <form action="" method="POST">
+          {% csrf_token %}
+            {{ response_form }}
+          <button class="mt-2 mb-2 btn btn-primary" type="submit">Откликаться</button>
+        </form>
+        {% endif %}
+      </div>
+{% endif %}
+
+<p>Отклики</p>
+{% for res in response %}
+{% if res.is_accepted %}
+  <div class="border mb-3 ps-3 pt-3 pb-3">
+    <h5>Автор - {{ res.response_author }}</h5>
+    <p>{{ res.response_content }}</p>
+    <small>{{ res.created_date}}</small>
+  </div>
+{% endif %}
+{% endfor %}
+{% endblock content %}

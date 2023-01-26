@@ -1,0 +1,89 @@
+{% extends 'default.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+{% block title %}
+Объявления
+{% endblock title %}
+
+{% block extra %}
+  <div class="text-center">
+    <a href="{% url 'myposts_list' %}" class="btn btn-dark btn-sm mt-2 w-75">Мои объявления - {{ posts_count}}</a>
+  </div> 
+{% endblock extra %}
+
+
+{% block content %}
+<table class='border text-center mb-3'>
+  <tr>
+      <th class="w-25 border">Название</th>
+      <th class="w-50 border">Контент</th>
+      <th class="w-25 border">Категория</th>
+      <th class="w-25 border ps-2 pe-2">Действия</th>
+  </tr>
+  {% for item in posts %}
+  <tr>
+      <td class="border">{{ item.post_title }}</td>
+      <td class="border">{{ item.post_content|safe|truncatechars_html:25 }}</td>
+      <td class="border">
+        {% for items in item.post_category.all %}
+         {{ items.get_category_name_display }} 
+        {% endfor %}
+      </td>
+      <td class="border"><a href="{% url 'post_detail' item.id %}" class="btn btn-sm btn-primary">Читать</a></td>
+    </tr>    
+  {% endfor %}
+</table>
+
+{% if page_obj %}
+        <ul class="pagination justify-content-center">
+            {% if page_obj.number == 1 %}
+                <li class="page-item disabled"><a class="page-link" href="?{% url_replace page=1 %}">{% translate 'Начало' %}</a></li> 
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?{% url_replace page=1 %}">{% translate 'Начало' %}</a></li>
+            {% endif %}
+
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">{% translate 'Пред.' %}</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">{% translate 'Пред.' %}</a></li>
+            {% endif %}
+
+            {% if page_obj.has_previous and page_obj.previous_page_number == 1 %}
+                <li class="page-item"><a class="page-link" href="?{% url_replace page=1 %}">1</a></li>
+            {% endif %}
+
+            {% if page_obj.previous_page_number != 1 %}
+                <span> ... </span>
+                <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number}}</a></li>
+            {% endif %}
+
+                <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number}}</a></li>
+            
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number}}</a></li>
+                {% if page_obj.paginator.num_pages != page_obj.next_page_number %}
+                <span> ... </span>
+                <li class="page-item "><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+                {% endif %}
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">{% translate 'След.' %}</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">{% translate 'След.' %}</a></li>
+            {% endif %}
+
+            {% if page_obj.number == page_obj.paginator.num_pages %}
+                <li class="page-item disabled"><a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}">{% translate 'Конец' %}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}">{% translate 'Конец' %}</a></li>
+            {% endif %}
+
+        </ul>
+    
+
+{% else %}
+    <h2>{% translate 'Нет объявлений' %}</h2>
+{% endif %}
+{% endblock content %}

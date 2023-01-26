@@ -1,0 +1,16 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillFactory</title>
+</head>
+<body>
+    <h2> {% blocktranslate %} Здравствуйте, {{ username }}. {% endblocktranslate %}</h2>
+    <p> Новое объявление было опубликовано по Вашей подписке </p>
+    <a href="{{ post_link }}">
+    <p>{{ text }}</p>
+</body>
+</html>
