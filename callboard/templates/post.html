@@ -47,12 +47,13 @@
 
 <p>Отклики</p>
 {% for res in response %}
-{% if res.is_accepted %}
-  <div class="border mb-3 ps-3 pt-3 pb-3">
-    <h5>Автор - {{ res.response_author }}</h5>
-    <p>{{ res.response_content }}</p>
-    <small>{{ res.created_date}}</small>
-  </div>
-{% endif %}
+  {% if res.is_accepted %}
+    <div class="border mb-3 ps-2 pt-2 pb-2">
+      <h3>Автор - {{ res.response_author}}</h3>
+      <p>Текст - {{ res.response_content}}</p>
+      <small>Дата - {{ res.created_date}}</small>
+    </div>
+  {% endif %}
 {% endfor %}
+
 {% endblock content %}
