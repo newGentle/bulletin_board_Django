@@ -8,7 +8,7 @@
 
 {% block extra %}
   <div class="text-center">
-    <a href="{% url 'myposts_list' %}" class="btn btn-dark btn-sm mt-2 w-75">Мои объявления - {{ posts_count}}</a>
+    <a href="{% url 'myposts_list' %}" class="btn btn-dark btn-sm mt-2 w-75">Мои объявления - {{ posts.count}}</a>
   </div> 
 {% endblock extra %}
 
